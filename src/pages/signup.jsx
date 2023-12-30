@@ -1,5 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const Signup = () => {
   const {
@@ -8,9 +10,22 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Add your form submission logic here
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    console.log(import.meta.env.VITE_BACKEND_URL);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+        data
+      );
+      if (res) {
+        toast.success(res.data.message);
+        navigate("/login");
+      }
+    } catch (error) {
+      toast.success("Failed to create user! Try again.");
+    }
   };
 
   return (
