@@ -4,11 +4,18 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Signup from "./pages/Signup";
 import { Toaster } from "react-hot-toast";
+import Profile from "./pages/Profile";
+import Navbar from "./components/Navbar";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: (
+      <>
+        <Navbar />
+        <Home />
+      </>
+    ),
   },
   {
     path: "/signup",
@@ -17,6 +24,15 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/profile",
+    element: (
+      <>
+        <Navbar />
+        <Profile />
+      </>
+    ),
   },
   {
     path: "*",
