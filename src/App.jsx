@@ -6,41 +6,55 @@ import Signup from "./pages/Signup";
 import { Toaster } from "react-hot-toast";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <>
-        <Navbar />
-        <Home />
-      </>
-    ),
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/profile",
-    element: (
-      <>
-        <Navbar />
-        <Profile />
-      </>
-    ),
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
+import { useSelector } from "react-redux";
 
 function App() {
+  const token = useSelector((state) => state.auth.token);
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <>
+          {token ? (
+            <>
+              <Navbar />
+              <Home />
+            </>
+          ) : (
+            <Login />
+          )}
+        </>
+      ),
+    },
+    {
+      path: "/signup",
+      element: <Signup />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/profile",
+      element: (
+        <>
+          {token ? (
+            <>
+              <Navbar />
+              <Profile />
+            </>
+          ) : (
+            <Login />
+          )}
+        </>
+      ),
+    },
+    {
+      path: "*",
+      element: <NotFound />,
+    },
+  ]);
   return (
     <>
       <RouterProvider router={router} />
