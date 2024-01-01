@@ -1,32 +1,32 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getDepartmentsAsync } from "../store/features/departments/departmentSlice";
+import { addUserAsync } from "../store/features/users/userSlice";
 
 const Signup = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const departments = useSelector((state) => state.department.departments);
+
   const onSubmit = async (data) => {
-    console.log(import.meta.env.VITE_BACKEND_URL);
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/user`,
-        data
-      );
-      if (res) {
-        toast.success(res.data.message);
-        navigate("/login");
-      }
-    } catch (error) {
-      toast.success("Failed to create user! Try again.");
-    }
+    dispatch(addUserAsync(data));
+    reset();
+    navigate("/login");
   };
+
+  useEffect(() => {
+    dispatch(getDepartmentsAsync());
+  }, [dispatch]);
 
   return (
     <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -74,6 +74,34 @@ const Signup = () => {
               {errors.password.message}
             </p>
           )}
+
+          <div className="mb-4">
+            <label className="block text-grey-darker text-sm font-bold mb-2">
+              Department
+            </label>
+            <select
+              {...register("department", {
+                required: "Department is required",
+              })}
+              className={`block appearance-none w-full border border-grey-light p-3 rounded mb-4 ${
+                errors.department && "border-red-500 mb-1"
+              }`}
+            >
+              <option value="" disabled>
+                Select a department
+              </option>
+              {departments.map((department) => (
+                <option key={department._id} value={department.name}>
+                  {department.name}
+                </option>
+              ))}
+            </select>
+            {errors.department && (
+              <p className="text-red-500 text-sm mb-4">
+                {errors.department.message}
+              </p>
+            )}
+          </div>
 
           <input
             {...register("location", { required: "Location is required" })}

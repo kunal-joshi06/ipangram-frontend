@@ -1,11 +1,12 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addUserAsync,
   editUserAsync,
 } from "../../store/features/users/userSlice";
+import { getDepartmentsAsync } from "../../store/features/departments/departmentSlice";
 
 export default function EditUserModal({
   title,
@@ -14,6 +15,7 @@ export default function EditUserModal({
   userDetails,
 }) {
   const dispatch = useDispatch();
+  const departments = useSelector((state) => state.department.departments);
   const {
     register,
     handleSubmit,
@@ -34,6 +36,10 @@ export default function EditUserModal({
     }
     setOpen(false);
   };
+
+  useEffect(() => {
+    dispatch(getDepartmentsAsync());
+  }, [dispatch]);
 
   return (
     <>
@@ -146,6 +152,38 @@ export default function EditUserModal({
                                 {errors.password.message}
                               </p>
                             )}
+
+                            <div className="mb-4">
+                              <label className="block text-grey-darker text-sm font-bold mb-2">
+                                Department
+                              </label>
+                              <select
+                                {...register("department", {
+                                  required: "Department is required",
+                                })}
+                                className={`block appearance-none w-full border border-grey-light p-3 rounded mb-4 ${
+                                  errors.department && "border-red-500 mb-1"
+                                }`}
+                                defaultValue={userDetails?.department || ""}
+                              >
+                                <option value="" disabled>
+                                  Select a department
+                                </option>
+                                {departments.map((department) => (
+                                  <option
+                                    key={department._id}
+                                    value={department.name}
+                                  >
+                                    {department.name}
+                                  </option>
+                                ))}
+                              </select>
+                              {errors.department && (
+                                <p className="text-red-500 text-sm mb-4">
+                                  {errors.department.message}
+                                </p>
+                              )}
+                            </div>
 
                             <input
                               {...register("location", {

@@ -5,9 +5,13 @@ import Pagination from "../components/Pagination";
 import SortOptions from "../components/SortOptions";
 import EditUserModal from "../components/Modals/EditUserModal";
 import DeleteUserModal from "../components/Modals/DeleteUserModal";
+import { Link } from "react-router-dom";
+import { getProfileAsync } from "../store/features/auth/authSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const loggedInUser = useSelector((state) => state.auth.user);
   const users = useSelector((state) => state.user.users);
   const pagination = useSelector((state) => state.user.pagination);
   const totalPages = pagination.totalPages;
@@ -27,6 +31,10 @@ const Home = () => {
   };
 
   useEffect(() => {
+    dispatch(getProfileAsync(token));
+  }, [dispatch, token]);
+
+  useEffect(() => {
     dispatch(getUsersAsync({ page, sortBy, sortOrder }));
   }, [dispatch, page, sortBy, sortOrder]);
 
@@ -35,12 +43,20 @@ const Home = () => {
       <h1 className="text-4xl text-center font-bold my-12">Users</h1>
       <div className="flex min-h-screen justify-center">
         <div className="overflow-x-auto">
-          <div className="flex justify-between">
-            <EditUserModal
-              title="Add a User"
-              type="add"
-              saveBtnText="Create User"
-            />
+          <div
+            className={
+              loggedInUser.role === "manager"
+                ? "flex justify-between"
+                : "flex justify-end"
+            }
+          >
+            {loggedInUser.role === "manager" && (
+              <EditUserModal
+                title="Add a User"
+                type="add"
+                saveBtnText="Create User"
+              />
+            )}
             <SortOptions sortChange={handleSortChange} />
           </div>
           <table className="min-w-full bg-white shadow-md rounded-xl">
@@ -66,15 +82,34 @@ const Home = () => {
                   <td className="py-3 px-4">
                     {user?.department ? user.department : "Not Assigned"}
                   </td>
-                  <td className="py-3 px-4 flex justify-between">
-                    <EditUserModal
-                      title="Edit user"
-                      type="edit"
-                      userDetails={user}
-                      saveBtnText="Save User"
-                    />
-                    <DeleteUserModal uId={user?._id} uName={user?.name} />
-                  </td>
+                  {loggedInUser.role === "manager" ? (
+                    <td className="py-3 px-4 flex justify-between">
+                      <EditUserModal
+                        title="Edit user"
+                        type="edit"
+                        userDetails={user}
+                        saveBtnText="Save User"
+                      />
+                      <DeleteUserModal uId={user?._id} uName={user?.name} />
+                      <div className="flex items-center">
+                        <Link
+                          className="font-medium text-blue-600 hover:text-blue-800 mx-2"
+                          to={`users/${user?._id}`}
+                        >
+                          View
+                        </Link>
+                      </div>
+                    </td>
+                  ) : (
+                    <td className="py-3 px-4 flex justify-between">
+                      <Link
+                        className="font-medium text-blue-600 hover:text-blue-800 mx-2"
+                        to={`users/${user?._id}`}
+                      >
+                        View
+                      </Link>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

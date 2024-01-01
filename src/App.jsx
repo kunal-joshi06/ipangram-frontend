@@ -6,27 +6,28 @@ import Signup from "./pages/Signup";
 import { Toaster } from "react-hot-toast";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
-import { useSelector } from "react-redux";
 import Departments from "./pages/Departments";
+import { useSelector } from "react-redux";
+import UserDetails from "./pages/UserDetails";
 
 function App() {
   const token = useSelector((state) => state.auth.token);
 
+  const protectedRoutes = (element) => {
+    return token ? (
+      <>
+        <Navbar />
+        {element}
+      </>
+    ) : (
+      <Login />
+    );
+  };
+
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <>
-          {token ? (
-            <>
-              <Navbar />
-              <Home />
-            </>
-          ) : (
-            <Login />
-          )}
-        </>
-      ),
+      element: token ? protectedRoutes(<Home />) : <Login />,
     },
     {
       path: "/signup",
@@ -38,39 +39,22 @@ function App() {
     },
     {
       path: "/departments",
-      element: (
-        <>
-          {token ? (
-            <>
-              <Navbar />
-              <Departments />
-            </>
-          ) : (
-            <Login />
-          )}
-        </>
-      ),
+      element: protectedRoutes(<Departments />),
     },
     {
       path: "/profile",
-      element: (
-        <>
-          {token ? (
-            <>
-              <Navbar />
-              <Profile />
-            </>
-          ) : (
-            <Login />
-          )}
-        </>
-      ),
+      element: protectedRoutes(<Profile />),
+    },
+    {
+      path: "/users/:id",
+      element: protectedRoutes(<UserDetails />),
     },
     {
       path: "*",
       element: <NotFound />,
     },
   ]);
+
   return (
     <>
       <RouterProvider router={router} />
