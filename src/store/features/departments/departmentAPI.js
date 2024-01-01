@@ -1,10 +1,8 @@
 import axios from "axios";
 
-export const getUsers = async (page, sortBy, sortOrder) => {
+export const getDepartments = async () => {
   try {
-    const reqUrl = `${
-      import.meta.env.VITE_BACKEND_URL
-    }/api/user?page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+    const reqUrl = `${import.meta.env.VITE_BACKEND_URL}/api/departments`;
     const response = await axios.get(reqUrl);
     return response;
   } catch (error) {
@@ -13,9 +11,9 @@ export const getUsers = async (page, sortBy, sortOrder) => {
   }
 };
 
-export const addUser = async (data) => {
+export const addDepartment = async (data) => {
   try {
-    const reqUrl = `${import.meta.env.VITE_BACKEND_URL}/api/user`;
+    const reqUrl = `${import.meta.env.VITE_BACKEND_URL}/api/departments`;
     const response = await axios.post(reqUrl, data);
     return response;
   } catch (error) {
@@ -23,9 +21,9 @@ export const addUser = async (data) => {
   }
 };
 
-export const editUser = async (id, data) => {
+export const editDepartment = async (id, data) => {
   try {
-    const reqUrl = `${import.meta.env.VITE_BACKEND_URL}/api/user/${id}`;
+    const reqUrl = `${import.meta.env.VITE_BACKEND_URL}/api/departments/${id}`;
     const response = await axios.put(reqUrl, data);
     return response;
   } catch (error) {
@@ -33,9 +31,9 @@ export const editUser = async (id, data) => {
   }
 };
 
-export const deleteUser = async (id) => {
+export const deleteDepartment = async (id) => {
   try {
-    const reqUrl = `${import.meta.env.VITE_BACKEND_URL}/api/user/${id}`;
+    const reqUrl = `${import.meta.env.VITE_BACKEND_URL}/api/departments/${id}`;
     const response = await axios.delete(reqUrl);
     return response;
   } catch (error) {

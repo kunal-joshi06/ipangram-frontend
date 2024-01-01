@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import { useSelector } from "react-redux";
+import Departments from "./pages/Departments";
 
 function App() {
   const token = useSelector((state) => state.auth.token);
@@ -34,6 +35,21 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "/departments",
+      element: (
+        <>
+          {token ? (
+            <>
+              <Navbar />
+              <Departments />
+            </>
+          ) : (
+            <Login />
+          )}
+        </>
+      ),
     },
     {
       path: "/profile",

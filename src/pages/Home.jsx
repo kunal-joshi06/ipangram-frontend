@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUsersAsync } from "../store/features/users/userSlice";
 import Pagination from "../components/Pagination";
 import SortOptions from "../components/SortOptions";
+import EditUserModal from "../components/Modals/EditUserModal";
+import DeleteUserModal from "../components/Modals/DeleteUserModal";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -34,10 +36,11 @@ const Home = () => {
       <div className="flex min-h-screen justify-center">
         <div className="overflow-x-auto">
           <div className="flex justify-between">
-            <button className="rounded relative inline-flex group items-center justify-center px-3.5 py-2 m-1 cursor-pointer border-b-4 border-l-2 active:border-green-600 active:shadow-none shadow-lg bg-gradient-to-tr from-green-600 to-green-500 border-green-700 text-white">
-              <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-32 group-hover:h-32 opacity-10"></span>
-              <span className="relative">Add User</span>
-            </button>
+            <EditUserModal
+              title="Add a User"
+              type="add"
+              saveBtnText="Create User"
+            />
             <SortOptions sortChange={handleSortChange} />
           </div>
           <table className="min-w-full bg-white shadow-md rounded-xl">
@@ -63,10 +66,14 @@ const Home = () => {
                   <td className="py-3 px-4">
                     {user?.department ? user.department : "Not Assigned"}
                   </td>
-                  <td className="py-3 px-4">
-                    <button className="font-medium text-blue-600 hover:text-blue-800">
-                      Edit
-                    </button>
+                  <td className="py-3 px-4 flex justify-between">
+                    <EditUserModal
+                      title="Edit user"
+                      type="edit"
+                      userDetails={user}
+                      saveBtnText="Save User"
+                    />
+                    <DeleteUserModal uId={user?._id} uName={user?.name} />
                   </td>
                 </tr>
               ))}

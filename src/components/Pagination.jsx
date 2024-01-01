@@ -20,7 +20,10 @@ const Pagination = ({ currentPage, totalPages, pageChange }) => {
           {Array.from({ length: totalPages }).map((_, index) => (
             <li
               key={index}
-              className={`page-item ${currentPage === index + 1 && "active"}`}
+              className={`page-item ${
+                currentPage === index + 1 &&
+                "text-white bg-blue-600 hover:bg-blue-600 rounded"
+              }`}
             >
               <button
                 className={`page-link relative block py-1.5 px-3  border-0 bg-transparent outline-none transition-all duration-300 rounded ${

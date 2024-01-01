@@ -76,20 +76,6 @@ const Signup = () => {
           )}
 
           <input
-            {...register("conf_password", { required: "Password is required" })}
-            type="password"
-            className={`block border border-grey-light w-full p-3 rounded mb-4 ${
-              errors.conf_password && "border-red-500 mb-1"
-            }`}
-            placeholder="Password"
-          />
-          {errors.conf_password && (
-            <p className="text-red-500 text-sm mb-4">
-              {errors.conf_password.message}
-            </p>
-          )}
-
-          <input
             {...register("location", { required: "Location is required" })}
             type="text"
             className={`block border border-grey-light w-full p-3 rounded mb-4 ${
