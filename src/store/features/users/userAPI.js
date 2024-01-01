@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const getUsers = async (page, sortBy, sortOrder) => {
   try {
@@ -20,6 +21,7 @@ export const addUser = async (data) => {
     return response;
   } catch (error) {
     console.log(error);
+    toast.error(error.response.data.error);
   }
 };
 
