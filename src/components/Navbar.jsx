@@ -5,6 +5,7 @@ import { logout } from "../store/features/auth/authSlice";
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const loggedInUser = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
   const handleLogout = () => {
     dispatch(logout());
@@ -13,12 +14,14 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow dark:bg-gray-800">
       <div className="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300">
-        <Link
-          to="/"
-          className="border-b-2 border-transparent hover:text-gray-800 dark:hover:text-gray-200 hover:border-blue-500 mx-1.5 sm:mx-6"
-        >
-          Users
-        </Link>
+        {loggedInUser.role === "manager" && (
+          <Link
+            to="/"
+            className="border-b-2 border-transparent hover:text-gray-800 dark:hover:text-gray-200 hover:border-blue-500 mx-1.5 sm:mx-6"
+          >
+            Users
+          </Link>
+        )}
 
         <Link
           to="/departments"

@@ -6,11 +6,9 @@ import SortOptions from "../components/SortOptions";
 import EditUserModal from "../components/Modals/EditUserModal";
 import DeleteUserModal from "../components/Modals/DeleteUserModal";
 import { Link } from "react-router-dom";
-import { getProfileAsync } from "../store/features/auth/authSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
   const loggedInUser = useSelector((state) => state.auth.user);
   const users = useSelector((state) => state.user.users);
   const pagination = useSelector((state) => state.user.pagination);
@@ -29,10 +27,6 @@ const Home = () => {
   const handlePageChange = (pageNo) => {
     setPage(pageNo);
   };
-
-  useEffect(() => {
-    dispatch(getProfileAsync(token));
-  }, [dispatch, token]);
 
   useEffect(() => {
     dispatch(getUsersAsync({ page, sortBy, sortOrder }));

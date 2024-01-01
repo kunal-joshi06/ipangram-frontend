@@ -7,11 +7,19 @@ import { Toaster } from "react-hot-toast";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import Departments from "./pages/Departments";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserDetails from "./pages/UserDetails";
+import { useEffect } from "react";
+import { getProfileAsync } from "./store/features/auth/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
+  const loggedInUser = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    dispatch(getProfileAsync(token));
+  }, [dispatch, token]);
 
   const protectedRoutes = (element) => {
     return token ? (
@@ -27,7 +35,13 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: token ? protectedRoutes(<Home />) : <Login />,
+      element: token ? (
+        protectedRoutes(
+          loggedInUser.role === "manager" ? <Home /> : <Profile />
+        )
+      ) : (
+        <Login />
+      ),
     },
     {
       path: "/signup",
